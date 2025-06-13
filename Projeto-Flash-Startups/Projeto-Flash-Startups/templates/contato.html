@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contato - FutureNext</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="shortcut icon" href="/static/img/LOGO.png" type="image/x-icon">
+</head>
+
+<body>
+  <header class="navbar">
+    <nav>
+      <ul>
+        <li><img src="/static/img/LogoComNome.png" height="100px" width="100px" alt="Logo FutureNext" class="logo-simples" /></li>
+        <li><a href="templates/index.html">Início</a></li>
+        <li><a href="templates/contato.html" class="active">Contato</a></li>
+        <li><a href="templates/sobre.html">Sobre</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="form-section">
+    <div class="contato-info">
+      <h2></h2>
+      <p>Tem dúvidas, sugestões ou quer colaborar com a nossa plataforma? Fale com a gente!</p>
+      <p><strong>Email:</strong> suporte@futurenext.com</p>
+      <p><strong>Telefone:</strong> (11) 94002-8922</p>
+      <p>
+        <strong>Redes sociais:</strong><br>
+        <a href="https://www.instagram.com/">Instagram</a> | <a href="https://museudememes.com.br/collection/cadeiradadodatena">LinkedIn</a> | <a href="https://museudememes.com.br/collection/drips-das-enchentes">Twitter</a>
+      </p>
+    </div>
+
+<section id="CONTATOS" class="form-section">
+  <h2>Entre em Contato com a FutureNext</h2>
+  <form id="contatosForm">
+    <input type="text" id=nome  placeholder="Seu nome" name="nome" required />
+      <input type="email" id=email placeholder="Seu e-mail" name="email" required />
+      <input type="text" id=assunto placeholder="Assunto" name="assunto" required />
+      <textarea id="mensagem" placeholder="Digite sua mensagem..." name="mensagem" rows="5" required></textarea>
+
+    <button type="submit">Enviar</button> 
+</form>
+  <div id="modalPopup" class="modal">
+    <div class="modal-content">
+      <h3>Mensagem enviada com sucesso!</h3>
+    </div>
+  </div>
+
+
+  <script>
+    function enviarFormulario() {
+      alert("Mensagem enviada com sucesso! Entraremos em contato em breve.");
+      return false; // Evita o reload da página após envio fictício
+    }
+  
+  document.getElementById("contatosForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); 
+
+    // 1. Coleta os dados do formulário
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const assunto = document.getElementById('assunto').value;
+    const mensagem = document.getElementById('mensagem').value;
+    
+    // 2. Cria o objeto de dados JSON
+    const data = {
+        nome: nome,
+        email: email,
+        assunto: assunto,
+        mensagem: mensagem,
+    };
+
+    try {
+      // 3. Envia os dados para a rota Flask
+      const response = await fetch('/contatos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' // MUITO IMPORTANTE: Indica que estamos enviando JSON
+        },
+        body: JSON.stringify(data) // Converte o objeto JavaScript em uma string JSON
+      });
+
+      const result = await response.json(); // Pega a resposta JSON do Flask
+
+      if (response.ok) { // Se a resposta for 200 OK
+        // Exibe o modal de sucesso
+        const modal = document.getElementById("modalPopup");
+        const modalMessage = modal.querySelector('h3');
+        const modalParagraph = modal.querySelector('p');
+
+        modalMessage.textContent = "Mensagem Enviada com Sucesso!";
+        modalParagraph.textContent = "Aguarde o retorno!";
+        modal.style.display = "flex";
+
+        setTimeout(() => {
+          modal.style.display = "none";
+          this.reset(); // Limpa os campos do formulário após sucesso
+        }, 3000); // Exibe por 3 segundos
+
+      } else { // Se houver um erro (ex: 400, 500)
+        // Exibe a mensagem de erro do Flask no modal ou em um alerta
+        const modal = document.getElementById("modalPopup");
+        const modalMessage = modal.querySelector('h3');
+        const modalParagraph = modal.querySelector('p');
+
+        modalMessage.textContent = "Erro ao mandar mensagem!";
+        modalParagraph.textContent = result.message || "Ocorreu um erro desconhecido.";
+        modal.style.display = "flex";
+
+        setTimeout(() => {
+          modal.style.display = "none";
+        }, 5000); // Exibe o erro por 5 segundos
+        console.error('Erro do servidor:', result.message);
+      }
+    } catch (error) {
+      console.error('Erro na requisição Fetch:', error);
+      // Caso haja um erro de rede ou na requisição em si
+      const modal = document.getElementById("modalPopup");
+      const modalMessage = modal.querySelector('h3');
+      const modalParagraph = modal.querySelector('p');
+
+      modalMessage.textContent = "Erro de Conexão!";
+      modalParagraph.textContent = "Não foi possível conectar ao servidor. Tente novamente.";
+      modal.style.display = "flex";
+
+      setTimeout(() => {
+        modal.style.display = "none";
+      }, 5000);
+    }
+  });
+  
+</script>
+  <footer class="site-footer">
+  <p>&copy; 2025 FutureNext — Seja Next. Seja Future.</p>
+</footer>
+</body>
+</html>
