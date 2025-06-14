@@ -231,3 +231,82 @@ a:hover {
     width: 100%;
   }
 }
+
+/* SOBRE - FutureNext */
+.sobre-section {
+  background: #ffffff;
+  padding: 4rem 15%;
+  line-height: 1.7;
+  color: #222;
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.sobre-section h1,
+.sobre-section h2 {
+  color: #14594B;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.sobre-section h1 {
+  font-size: 2.6rem;
+  margin-bottom: 2rem;
+}
+
+.sobre-section h2 {
+  font-size: 1.8rem;
+  margin-top: 2.5rem;
+}
+
+.sobre-section p {
+  font-size: 1.1rem;
+  text-align: justify;
+  margin-bottom: 1rem;
+}
+
+.sobre-section ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.sobre-section ul li {
+  margin-bottom: 0.6rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.sobre-section ul li::before {
+  content: "💡";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .sobre-section {
+    padding: 2rem 10%;
+  }
+
+  .sobre-section h1 {
+    font-size: 2rem;
+  }
+
+  .sobre-section h2 {
+    font-size: 1.4rem;
+  }
+}
