@@ -10,6 +10,7 @@
 body {
   background-color: #f7f9fc;
   color: #000000e3;
+  scroll-behavior: smooth;
 }
 
 /* NAVBAR */
@@ -18,7 +19,10 @@ body {
   padding: 1rem 2rem;
   display: flex;
   justify-content: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .navbar nav ul {
@@ -26,43 +30,76 @@ body {
   list-style: none;
   gap: 2rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .navbar a {
   text-decoration: none;
-  color: #222;
+  color: #fff;
   font-weight: bold;
   transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
 }
 
 .navbar a.active,
 .navbar a:hover {
   background-color: #ffffff20;
-  color: #fff;
-  padding: 0.3rem 0.8rem;
-  border-radius: 5px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
 }
 
 .logo-simples {
-  height: 100px;
-  margin-right: 0.1rem;
+  height: 80px;
+  margin-right: 0.5rem;
   vertical-align: middle;
+}
+
+/* HERO SECTION */
+.hero-section {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(to bottom, #ffffff, #f1f8f6);
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  color: #14594B;
+  margin-bottom: 1rem;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.logo-full img {
+  margin-top: 2rem;
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
 }
 
 /* FORM SECTION */
 .form-section {
   background-image: linear-gradient(#ffebc2, #ffffff);
-  padding: 4rem 15%;
+  padding: 4rem 10%;
   text-align: center;
+}
+
+.form-section h2 {
+  font-size: 2rem;
+  color: #14594B;
+  margin-bottom: 2rem;
 }
 
 form {
   display: flex;
   flex-direction: column;
   max-width: 600px;
-  margin: 2rem auto;
-  gap: 1rem;
+  margin: 0 auto;
+  gap: 1.2rem;
 }
 
 form input,
@@ -73,6 +110,15 @@ form textarea {
   border-radius: 10px;
   font-size: 1rem;
   width: 100%;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: #22b5d1;
+  box-shadow: 0 0 5px rgba(34, 181, 209, 0.5);
 }
 
 form button {
@@ -83,29 +129,28 @@ form button {
   border-radius: 40px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 form button:hover {
   background-color: #22b5d1;
 }
 
-/* CONTATO EXTRA INFO */
-.contato-info {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto 2rem auto;
+form button:active {
+  transform: scale(0.97);
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-.contato-info h2 {
-  font-size: 2rem;
-  color: #000;
-  margin-bottom: 1rem;
+/* FILE INPUT */
+.form-section label {
+  margin-top: 10px;
+  display: block;
+  font-weight: bold;
+  text-align: left;
 }
 
-.contato-info p {
-  font-size: 1.1rem;
-  margin-bottom: 0.7rem;
+.form-section input[type="file"] {
+  margin-bottom: 15px;
 }
 
 /* MODAL */
@@ -128,23 +173,18 @@ form button:hover {
   border-radius: 15px;
   text-align: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease;
+  animation: fadeInScale 0.4s ease forwards;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* LINKS */
-a {
-  color: #197A63;
-  text-decoration: none;
-  padding: 0.5rem;
-}
-
-a:hover {
-  text-decoration: underline;
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* FOOTER */
@@ -157,13 +197,37 @@ a:hover {
   margin-top: 40px;
 }
 
-/* FILE INPUT */
-.form-section label {
-  margin-top: 10px;
-  display: block;
-  font-weight: bold;
+/* GLOBAL LINKS */
+a {
+  color: #197A63;
+  text-decoration: none;
+  padding: 0.5rem;
 }
 
-.form-section input[type="file"] {
-  margin-bottom: 15px;
+a:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .navbar nav ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .logo-simples {
+    height: 60px;
+  }
+
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+
+  .form-section {
+    padding: 2rem 5%;
+  }
+
+  form {
+    width: 100%;
+  }
 }
