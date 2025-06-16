@@ -33,7 +33,7 @@ def index():
 
 @app.route('/contato.html')
 def contato():
-    return render_template('contato.html')
+    return render_template('templates\contato.html')
 
 @app.route('/contatos', methods=['POST'])
 def contatos():
