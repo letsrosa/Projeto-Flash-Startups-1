@@ -1,5 +1,4 @@
-/* style.css - FUTURENEXT */
-/* RESET */
+
 * {
   margin: 0;
   padding: 0;
@@ -13,6 +12,77 @@ body {
   scroll-behavior: smooth;
 }
 
+.highlight-section {
+    background-color: #ffebc2;
+    padding: 3rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.cards-container {
+    display: flex;
+    gap: 1rem;
+    overflow: hidden; /* Importante para o carrossel, esconde cards fora da vista */
+    max-width: 900px;
+}
+
+.arrow {
+    cursor: pointer;
+    font-size: 2rem;
+    color: #d3d3d3;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    transition: 0.3s;
+}
+
+.arrow:hover {
+    color: #197A63;
+}
+
+.arrow.left {
+    left: 10px; /* Ajuste a distância da borda esquerda */
+}
+
+.arrow.right {
+    right: 10px; /* Ajuste a distância da borda direita */
+}
+
+.card {
+    width: 250px;
+    min-height: 160px; /* Garante uma altura mínima para o card */
+    padding: 1rem;
+    background-color: #f5f5f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(104, 101, 101, 0.322);
+    flex-shrink: 0; /* Impede que o card encolha no flex container */
+}
+
+.card-img {
+    width: 100%; /* A imagem preenche a largura do card */
+    height: auto; /* Mantém a proporção da imagem */
+    margin-bottom: 0.5rem; /* Espaço abaixo da imagem */
+    border-radius: 6px; /* Cantos levemente arredondados para a imagem */
+}
+
+.card-btn {
+    margin-top: 0.5rem; /* Espaço acima do botão */
+    padding: 0.6rem 1rem; /* Espaçamento interno do botão */
+    background-color: #197A63; /* Cor de fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda padrão do botão */
+    border-radius: 4px; /* Cantos arredondados do botão */
+    font-size: 0.95rem; /* Tamanho da fonte do botão */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    transition: background-color 0.3s; /* Transição suave na cor de fundo */
+}
+
+.card-btn:hover {
+    background-color: #22b5d1; /* Altera a cor de fundo do botão ao passar o mouse */
+}
 /* NAVBAR */
 .navbar {
   background-color: #197A63;
