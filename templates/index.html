@@ -13,9 +13,9 @@
       <nav>
         <ul>
           <li><img src="/static/img/LOGO.png" height="100px" width="100px" alt="Logo Simples" class="logo-simples" /></li>
-          <li><a href="/index.html" class="active">Início</a></li>
-          <li><a href="/templates/contato.html">Contato</a></li>
-          <li><a href="/templates/sobre.html">Sobre</a></li>
+          <li><a href="{{ url_for('index') }}" class="active">Início</a></li>
+          <li><a href="{{ url_for('contato') }}">Contato</a></li>
+          <li><a href="{{ url_for('sobre') }}">Sobre</a></li>
         </ul>
       </nav>
     </header>
@@ -115,10 +115,13 @@
         setTimeout(() => { modal.style.display = "none"; }, 5000);
       }
     });
+    
   </script>
 
   <footer class="site-footer">
     <p>&copy; 2025 FutureNext — Seja Next. Seja Future.</p>
   </footer>
+<script src="/static/js/script.js"></script>
+
 </body>
 </html>

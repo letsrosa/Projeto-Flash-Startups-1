@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 from database import db, Categoria, Usuario, Ideia, Contatos # Importe os novos modelos
 import os
 from datetime import datetime
@@ -24,16 +24,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 @app.route('/')
+def index():
+    return render_template('index.html')  # index.html deve conter seu HTML acima
+
+@app.route('/contato')
+def contato():
+    return render_template('contato.html')
+
+@app.route('/sobre')
 def sobre():
     return render_template('sobre.html')
-
-@app.route('/index.html')
-def index():
-    return render_template('index.html')
-
-@app.route('/contato.html')
-def contato():
-    return render_template('templates\contato.html')
 
 @app.route('/contatos', methods=['POST'])
 def contatos():
