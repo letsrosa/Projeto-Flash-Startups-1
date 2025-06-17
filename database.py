@@ -46,6 +46,8 @@ class Ideia(db.Model):
     titulo = db.Column(db.String(150), nullable=False)
     descricao = db.Column(db.Text, nullable=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow) 
+    logo = db.Column(db.String(255), nullable=True)  
+
 
     id_categoria = db.Column(db.Integer, db.ForeignKey('Categoria.id_categoria'), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('Usuario.id_usuario'), nullable=False)

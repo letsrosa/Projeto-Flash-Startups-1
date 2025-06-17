@@ -3,6 +3,8 @@ from database import db, Categoria, Usuario, Ideia, Contatos # Importe os novos 
 import os
 from datetime import datetime
 import urllib.parse
+import uuid
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -22,6 +24,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def index():
@@ -63,47 +74,70 @@ def contatos():
 
 @app.route('/cadastrar_ideia', methods=['POST'])
 def cadastrar_ideia():
-        data = request.get_json()
+    titulo = request.form.get('titulo')
+    problema = request.form.get('problemaResolvido')
+    solucao = request.form.get('solucaoProposta')
+    diferencial = request.form.get('diferencial')
+    nome_usuario = request.form.get('nomeAutor')
+    email_usuario = request.form.get('emailUsuario')
+    categoria_nome = request.form.get('categoria')
+    logo = request.files.get('logo')
 
-        titulo = data.get('titulo') 
-        descricao_problema = data.get('problemaResolvido')
-        descricao_solucao = data.get('solucaoProposta')
-        descricao_diferencial = data.get('diferencial')
-        descricao_completa = f"Problema: {descricao_problema}\nSolução: {descricao_solucao}\nDiferencial: {descricao_diferencial}"
+    if not all([titulo, problema, solucao, diferencial, nome_usuario, categoria_nome, logo]):
+        return jsonify({'success': False, 'message': 'Todos os campos são obrigatórios!'}), 400
 
-        nome_usuario = data.get('nomeAutor') 
-        email_usuario = data.get('emailUsuario', f"{nome_usuario.replace(' ', '').lower()}@example.com") 
-        categoria_nome = data.get('categoria') 
+    if not allowed_file(logo.filename):
+        return jsonify({'success': False, 'message': 'Tipo de arquivo não permitido!'}), 400
 
-        if not all([titulo, descricao_problema, descricao_solucao, descricao_diferencial, nome_usuario, categoria_nome]):
-            return jsonify({'success': False, 'message': 'Todos os campos são obrigatórios!'}), 400
+    filename = secure_filename(f"{uuid.uuid4().hex}_{logo.filename}")
+    caminho = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    logo.save(caminho)
 
-        categoria = Categoria.query.filter_by(nome=categoria_nome).first()
-        if not categoria:
-            categoria = Categoria(nome=categoria_nome, descricao=f"Categoria de {categoria_nome}")
-            db.session.add(categoria)
-            db.session.commit() 
+    categoria = Categoria.query.filter_by(nome=categoria_nome).first()
+    if not categoria:
+        categoria = Categoria(nome=categoria_nome, descricao=f"Categoria de {categoria_nome}")
+        db.session.add(categoria)
+        db.session.commit()
 
-        usuario = Usuario.query.filter_by(email=email_usuario).first()
-        if not usuario:
-            usuario = Usuario(nome=nome_usuario, email=email_usuario, senha="senha_temporaria_hash")
-            db.session.add(usuario)
-            db.session.commit() 
+    usuario = Usuario.query.filter_by(email=email_usuario).first()
+    if not usuario:
+        usuario = Usuario(nome=nome_usuario, email=email_usuario, senha="senha_temporaria")
+        db.session.add(usuario)
+        db.session.commit()
 
-        nova_ideia = Ideia(
-            titulo=titulo,
-            descricao=descricao_completa,
-            id_categoria=categoria.id_categoria,
-            id_usuario=usuario.id_usuario,
-            data_criacao=datetime.utcnow() 
-        )
-        try:
-            db.session.add(nova_ideia)
-            db.session.commit()
-            return jsonify({'success': True, 'message': 'Ideia (Startup) cadastrada com sucesso!'}), 200
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'success': False, 'message': f'Erro ao cadastrar ideia: {str(e)}'}), 500
+    nova_ideia = Ideia(
+        titulo=titulo,
+        descricao=f"Problema: {problema}\nSolução: {solucao}\nDiferencial: {diferencial}",
+        id_categoria=categoria.id_categoria,
+        id_usuario=usuario.id_usuario,
+        data_criacao=datetime.utcnow(),
+    )
+
+    # 🚨 Adiciona o campo logo_url:
+    nova_ideia.logo = f"/static/uploads/{filename}"
+
+    try:
+        db.session.add(nova_ideia)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Startup cadastrada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/listar_ideias', methods=['GET'])
+def listar_ideias():
+    ideias = Ideia.query.all()
+    resultado = []
+    for ideia in ideias:
+        resultado.append({
+            'titulo': ideia.titulo,
+            'descricao': ideia.descricao,
+            'data_criacao': ideia.data_criacao.strftime('%Y-%m-%d'),
+            'categoria': ideia.categoria.nome,
+            'autor': ideia.usuario.nome
+        })
+    return jsonify(resultado), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
